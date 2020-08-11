@@ -35,10 +35,19 @@ var UIController=(function(){
 
 var appController=(function(budgetCtrl,UICtrl){
 
-    var DOM=UICtrl.getDOMstrings();
+    let setupEventListener=function(){
+        let DOM=UICtrl.getDOMstrings();
+        let addBtn=document.getElementsByClassName(DOM.inputBtn)[0];
 
-    let addBtn=document.getElementsByClassName(DOM.inputBtn)[0];
+        addBtn.addEventListener('click',ctrlAddItem);
 
+        document.addEventListener('keypress',function(e){
+            if(e.keyCode===13 || e.which===13){
+                ctrlAddItem();
+            }
+    });
+
+    }
     let ctrlAddItem=function(){
         
         // 1. get the input value
@@ -48,14 +57,15 @@ var appController=(function(budgetCtrl,UICtrl){
         // 3. add the item to UI
         // 4. calculate budget
         // 5. Display the budget on the UI
+        console.log(input);
     }
 
-    addBtn.addEventListener('click',ctrlAddItem);
-
-    document.addEventListener('keypress',function(e){
-        if(e.keyCode===13 || e.which===13){
-            ctrlAddItem();
+    return{
+        init: function(){
+            setupEventListener();
         }
-    });
+    }
 
 })(budgetController,UIController);
+
+appController.init();
