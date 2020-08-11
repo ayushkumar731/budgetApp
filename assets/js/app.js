@@ -60,7 +60,9 @@ var UIController=(function(){
         inputDescription: 'add__description',
         inputValue: 'add__value',
         incomeContainer: 'income__list',
-        expenseContainer: 'expenses__list'
+        expenseContainer: 'expenses__list',
+        inputValueQuery: '.add__value',
+        inputDescriptionQuery: '.add__description'
     };
 
     return{
@@ -93,6 +95,24 @@ var UIController=(function(){
 
             document.getElementsByClassName(element)[0].insertAdjacentHTML('beforeend',newHtml);
 
+        },
+        clearField: function(){
+            let field,fieldArr;
+
+            //access the input field
+            field=document.querySelectorAll(DOMstrings.inputValueQuery + ','+ DOMstrings.inputDescriptionQuery);
+
+            //convert into the array
+            fieldArr=Array.prototype.slice.call(field);
+
+            //itetating in the array
+            fieldArr.forEach((element,index,array) => {
+                //clear the field value
+                element.value = "";
+            });
+
+            //focus the input field description
+            fieldArr[0].focus();
         },
         getDOMstrings: function(){
             return DOMstrings;
@@ -129,6 +149,9 @@ var appController=(function(budgetCtrl,UICtrl){
 
         // 3. add the item to UI
         UICtrl.addListItem(newItems,input.type);
+
+        // 4. clear input field
+        UICtrl.clearField();
         // 4. calculate budget
         // 5. Display the budget on the UI
     };
