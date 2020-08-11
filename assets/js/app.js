@@ -70,7 +70,7 @@ var UIController=(function(){
             return{
                 type: document.getElementsByClassName(DOMstrings.inputType)[0].value,
                 description: document.getElementsByClassName(DOMstrings.inputDescription)[0].value,
-                value: document.getElementsByClassName(DOMstrings.inputValue)[0].value
+                value: parseFloat(document.getElementsByClassName(DOMstrings.inputValue)[0].value)
             };
         },
         addListItem: function(obj,type){
@@ -138,22 +138,34 @@ var appController=(function(budgetCtrl,UICtrl){
     });
 
     };
+
+    let updateBudge=function(){
+
+        // 1. calculate budget
+        // 2. Display the budget on the UI
+    };
+
     let ctrlAddItem=function(){
         
         let input,newItems
         // 1. get the input value
         input=UICtrl.getInput();
 
-        // 2. add the item to the budget ctrlr
-        newItems=budgetCtrl.addItem(input.type,input.description,input.value);
+        if(input.description!="" && !isNaN(input.value) && input.value>0){
 
-        // 3. add the item to UI
-        UICtrl.addListItem(newItems,input.type);
+            // 2. add the item to the budget ctrlr
+            newItems=budgetCtrl.addItem(input.type,input.description,input.value);
 
-        // 4. clear input field
-        UICtrl.clearField();
-        // 4. calculate budget
-        // 5. Display the budget on the UI
+            // 3. add the item to UI
+            UICtrl.addListItem(newItems,input.type);
+
+            // 4. clear input field
+            UICtrl.clearField();
+
+            // 5. update budget 
+
+            updateBudge();
+        }
     };
 
     return{
