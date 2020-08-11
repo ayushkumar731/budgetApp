@@ -1,7 +1,28 @@
 var budgetController=(function(){
+
+    let Income= function(id,description,value){
+        this.id=id,
+        this.description=description,
+        this.value=value
+    };
+
+    let Expense= function(id,description,value){
+        this.id=id,
+        this.description=description,
+        this.value=value
+    };
+
+    let data={
+        allItems:{
+            exp:[],
+            inc:[]
+        },
+        total:{
+            exp:0,
+            inc:0
+        }
+    };
     
-
-
 })();
 
 
@@ -47,7 +68,7 @@ var appController=(function(budgetCtrl,UICtrl){
             }
     });
 
-    }
+    };
     let ctrlAddItem=function(){
         
         // 1. get the input value
@@ -58,13 +79,13 @@ var appController=(function(budgetCtrl,UICtrl){
         // 4. calculate budget
         // 5. Display the budget on the UI
         console.log(input);
-    }
+    };
 
     return{
         init: function(){
             setupEventListener();
         }
-    }
+    };
 
 })(budgetController,UIController);
 
