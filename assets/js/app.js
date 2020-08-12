@@ -100,10 +100,10 @@ var UIController=(function(){
         expenseContainer: 'expenses__list',
         inputValueQuery: '.add__value',
         inputDescriptionQuery: '.add__description',
-        inputAvailableBudget: 'budget__value',
-        inputTotalIncome: 'budget__income--value',
-        inputTotalExpenses: 'budget__expenses--value',
-        inputPercentage: 'budget__expenses--percentage'
+        budgetLabel: 'budget__value',
+        incomeLabel: 'budget__income--value',
+        expenseLabel: 'budget__expenses--value',
+        percentageLabel: 'budget__expenses--percentage'
 
     };
 
@@ -156,6 +156,17 @@ var UIController=(function(){
             //focus the input field description
             fieldArr[0].focus();
         },
+        displayBudget: function(obj){
+            document.getElementsByClassName(DOMstrings.budgetLabel)[0].textContent=obj.budget;
+            document.getElementsByClassName(DOMstrings.incomeLabel)[0].textContent=obj.totalIncome;
+            document.getElementsByClassName(DOMstrings.expenseLabel)[0].textContent=obj.totalExpenses;
+        
+            if(obj.percentage>0){
+                document.getElementsByClassName(DOMstrings.percentageLabel)[0].textContent=obj.percentage +'%';
+            }else{
+                document.getElementsByClassName(DOMstrings.percentageLabel)[0].textContent='___';
+            }
+        },
         getDOMstrings: function(){
             return DOMstrings;
         }
@@ -181,23 +192,23 @@ var appController=(function(budgetCtrl,UICtrl){
 
     }
 
-    let updateBudge=function(){
+    let updateBudget=function(){
 
         // 1. calculate budget
         budgetController.calculateBudget();
 
         // 2. return the budget
-        let budget=budgetController.getBudget();
+        var budget=budgetController.getBudget();
 
         // 3. Display the budget on the UI
-        console.log(budget);
+        UICtrl.displayBudget(budget);
 
 
     }
 
     let ctrlAddItem=function(){
         
-        let input,newItems
+        var input,newItems
         // 1. get the input value
         input=UICtrl.getInput();
 
@@ -214,12 +225,18 @@ var appController=(function(budgetCtrl,UICtrl){
 
             // 5. update budget 
 
-            updateBudge();
+            updateBudget();
         }
     }
 
     return{
         init: function(){
+            UICtrl.displayBudget({
+                budget: 0,
+                percentage: -1,
+                totalIncome: 0,
+                totalExpenses: 0
+            });
             setupEventListener();
         }
     };
