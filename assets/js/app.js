@@ -9,8 +9,23 @@ var budgetController=(function(){
     let Expense= function(id,description,value){
         this.id=id,
         this.description=description,
-        this.value=value
+        this.value=value,
+        this.percentage=-1
     };
+
+    Expense.prototype.calcPercentage=function(totalIncome){
+
+        if(totalIncome>0){
+            this.percentage=Math.round((this.value/totalIncome)*100);
+        }else{
+            this.percentage=-1;
+        }
+        
+    }
+
+    Expense.prototype.getPercentage=function(){
+        return this.percentage;
+    }
 
     let calculateTotal= function(type){
         var sum=0;
@@ -83,6 +98,17 @@ var budgetController=(function(){
                data.percentage=-1;
            }
         },
+        calculatePercentage: function(){
+            data.allItems.exp.forEach((el)=>{
+                el.calcPercentage(data.total.inc);
+            });
+        },
+        getPercentage: function(){
+            let percentage=data.allItems.exp.map((el)=>{
+                return el.getPercentage();
+            });
+            return percentage;
+        },
         getBudget: function(){
 
             return{
@@ -134,10 +160,10 @@ var UIController=(function(){
             //create HTML string with placeholder text
             if(type==='inc'){
                 element=DOMstrings.incomeContainer;
-                html= '<div class="item clearfix" id="inc-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>'
+                html= '<div class="item clearfix" id="inc-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">+%value%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>'
             }else if(type==='exp'){
                 element=DOMstrings.expenseContainer;
-                html='<div class="item clearfix" id="exp-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>'
+                html='<div class="item clearfix" id="exp-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">-%value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>'
             }
 
             //replace the placeholder text from actual data
@@ -222,7 +248,18 @@ var appController=(function(budgetCtrl,UICtrl){
         UICtrl.displayBudget(budget);
 
 
-    }
+    };
+    
+    let updatePercentages= function(){
+        // 1. calculate percentage
+        budgetController.calculatePercentage();
+
+        // 2. return the percentage3
+        let percentage=budgetController.getPercentage();
+
+        // 3. display the percentage on UI
+        console.log(percentage);
+    };
 
     let ctrlAddItem=function(){
         
@@ -244,8 +281,12 @@ var appController=(function(budgetCtrl,UICtrl){
             // 5. update budget 
 
             updateBudget();
+
+            //6. update percentage
+
+            updatePercentages();
         }
-    }
+    };
     let ctrlDeleteItem= function(e){
         let itemId,splitId,type,ID;
 
@@ -265,8 +306,12 @@ var appController=(function(budgetCtrl,UICtrl){
 
             // 3. Update and show the new budget 
             updateBudget()
+
+            //4. update percentage
+
+            updatePercentages();
         }
-    }
+    };
 
     return{
         init: function(){
