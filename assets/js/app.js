@@ -150,7 +150,8 @@ var UIController=(function(){
         incomeLabel: 'budget__income--value',
         expenseLabel: 'budget__expenses--value',
         percentageLabel: 'budget__expenses--percentage',
-        container: 'container'
+        container: 'container',
+        expensePercentageLable: '.item__percentage'
     };
 
     return{
@@ -217,6 +218,41 @@ var UIController=(function(){
                 document.getElementsByClassName(DOMstrings.percentageLabel)[0].textContent='___';
             }
         },
+        displayPercentage: function(percentages){
+            //access all percentage label in the expense
+           var field= document.querySelectorAll(DOMstrings.expensePercentageLable);
+
+           //1st method to put the value of percentage
+
+           //iterate entire the list of percentage label in the expense
+           var nodeListForEach= function(list,callback){
+               for(var i=0;i<list.length;i++){
+                   callback(list[i],i);
+               }
+           }
+           //finally put the value
+           nodeListForEach(field,function(curr,index){
+               
+                if(percentages[index]>0){
+                    curr.textContent=percentages[index]+ '%';
+                }else{
+                    curr.textContent='___'
+                }
+           });
+
+           //2nd method to put the percentage value
+           /*
+            field.forEach((element,index)=>{
+                if(percentages[index]>0){
+                    element.textContent=percentages[index]+ '%';
+                }else{
+                    element.textContent='___'
+                }
+            });
+            
+            */
+           
+        },
         getDOMstrings: function(){
             return DOMstrings;
         }
@@ -265,7 +301,7 @@ var appController=(function(budgetCtrl,UICtrl){
         let percentage=budgetController.getPercentage();
 
         // 3. display the percentage on UI
-        console.log(percentage);
+        UICtrl.displayPercentage(percentage);
     };
 
     let ctrlAddItem=function(){
