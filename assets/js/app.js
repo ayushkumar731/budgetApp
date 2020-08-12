@@ -12,7 +12,7 @@ var budgetController=(function(){
         this.value=value,
         this.percentage=-1
     };
-
+    // add percentage method to expense oject
     Expense.prototype.calcPercentage=function(totalIncome){
 
         if(totalIncome>0){
@@ -22,11 +22,12 @@ var budgetController=(function(){
         }
         
     }
-
+    // add getpercentage method to expense object
     Expense.prototype.getPercentage=function(){
         return this.percentage;
     }
 
+    //sum of total income
     let calculateTotal= function(type){
         var sum=0;
         data.allItems[type].forEach((element)=>{
@@ -34,7 +35,7 @@ var budgetController=(function(){
         });
         data.total[type]=sum;
     }
-
+    //structure of data
     let data={
         allItems:{
             exp:[],
@@ -48,7 +49,9 @@ var budgetController=(function(){
         percentage:-1
     };
 
+    // all the items access from other module
     return{
+
         addItem: function(type,des,val){
 
             //creating ID
@@ -70,6 +73,7 @@ var budgetController=(function(){
             //return newItems
             return newItems
         },
+
         deleteItem: function(type,id){
             let ids,index;
 
@@ -83,6 +87,7 @@ var budgetController=(function(){
             }
           
         },
+
         calculateBudget: function(){
            //calculate total income or expense
            calculateTotal('exp');
@@ -99,11 +104,13 @@ var budgetController=(function(){
            }
         },
         calculatePercentage: function(){
+            //iterating entire expense array and add the method
             data.allItems.exp.forEach((el)=>{
                 el.calcPercentage(data.total.inc);
             });
         },
         getPercentage: function(){
+            //extract the percentage from entire expense array
             let percentage=data.allItems.exp.map((el)=>{
                 return el.getPercentage();
             });
